@@ -1,15 +1,17 @@
 import React from 'react';
+import {HandlerFunction} from "@storybook/addon-actions";
 
-interface Task {
+export interface ITask {
     id: string;
     title: string;
     state: string;
+    updatedAt?: Date;
 }
 
 interface Params {
-    task: Task;
-    onArchiveTask: (id: string) => {};
-    onPinTask: (id: string) => {};
+    task: ITask;
+    onArchiveTask: HandlerFunction;
+    onPinTask: HandlerFunction;
 }
 
 export default function Task({task: {id, title, state}, onArchiveTask, onPinTask}: Params) {
@@ -30,6 +32,7 @@ export default function Task({task: {id, title, state}, onArchiveTask, onPinTask
 
             <div className="actions" onClick={event => event.stopPropagation()}>
                 {state !== 'TASK_ARCHIVED' && (
+                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a onClick={() => onPinTask(id)}>
                         <span className={`icon-star`}/>
                     </a>
