@@ -1,16 +1,34 @@
 import {createStore} from 'redux';
 import {ITask} from "../components/Task";
 
-export const actions = {
-    ARCHIVE_TASK: 'ARCHIVE_TASK',
-    PIN_TASK: 'PIN_TASK',
+const ARCHIVE_TASK = 'ARCHIVE_TASK'
+const PIN_TASK = 'PIN_TASK'
+
+interface TasksState {
+    tasks: ITask[]
+}
+
+interface ARCHIVE_TASK_ACTION {
+    type: typeof ARCHIVE_TASK;
+    id: string;
+}
+
+interface PIN_TASK_ACTION {
+    type: typeof PIN_TASK;
+    id: string;
+}
+
+type TaskActionTypes = ARCHIVE_TASK_ACTION | PIN_TASK_ACTION
+
+export const archiveTask = (id: string): TaskActionTypes => ({type: ARCHIVE_TASK, id});
+export const pinTask = (id: string): TaskActionTypes => ({type: PIN_TASK, id});
+
+const initialState: TasksState = {
+    tasks: []
 };
 
-export const archiveTask = (id: string) => ({type: actions.ARCHIVE_TASK, id});
-export const pinTask = (id: string) => ({type: actions.PIN_TASK, id});
-
 function taskStateReducer(taskState: string) {
-    return (state: { tasks: ITask[]; }, action: { type?: string; id: string; }) => {
+    return (state: TasksState, action: TaskActionTypes): TasksState => {
         return {
             ...state,
             tasks: state.tasks.map((task: ITask) =>
@@ -20,11 +38,11 @@ function taskStateReducer(taskState: string) {
     };
 }
 
-export const reducer = (state: { tasks: ITask[]; }, action: { type?: string; id: string; }) => {
+export const reducer = (state: TasksState = initialState, action: TaskActionTypes): TasksState => {
     switch (action.type) {
-        case actions.ARCHIVE_TASK:
+        case ARCHIVE_TASK:
             return taskStateReducer('TASK_ARCHIVED')(state, action);
-        case actions.PIN_TASK:
+        case PIN_TASK:
             return taskStateReducer('TASK_PINNED')(state, action);
         default:
             return state;
