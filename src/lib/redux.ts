@@ -5,7 +5,8 @@ const ARCHIVE_TASK = 'ARCHIVE_TASK'
 const PIN_TASK = 'PIN_TASK'
 
 interface TasksState {
-    tasks: ITask[]
+    tasks: ITask[],
+    error?: string | null
 }
 
 interface ARCHIVE_TASK_ACTION {
@@ -24,7 +25,8 @@ export const archiveTask = (id: string): TaskActionTypes => ({type: ARCHIVE_TASK
 export const pinTask = (id: string): TaskActionTypes => ({type: PIN_TASK, id});
 
 const initialState: TasksState = {
-    tasks: []
+    tasks: [],
+    error: null
 };
 
 function taskStateReducer(taskState: string) {
