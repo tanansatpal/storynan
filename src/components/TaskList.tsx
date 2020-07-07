@@ -1,6 +1,8 @@
 import React from 'react';
 
 import Task, {ITask} from './Task';
+import {connect} from 'react-redux';
+import {archiveTask, pinTask} from '../lib/redux';
 import {HandlerFunction} from "@storybook/addon-actions";
 
 interface Params {
@@ -10,7 +12,7 @@ interface Params {
     onArchiveTask: HandlerFunction
 }
 
-function TaskList({loading = false, tasks, onPinTask, onArchiveTask}: Params) {
+export function PureTaskList({loading = false, tasks, onPinTask, onArchiveTask}: Params) {
     const events = {
         onPinTask,
         onArchiveTask,
@@ -66,4 +68,13 @@ function TaskList({loading = false, tasks, onPinTask, onArchiveTask}: Params) {
     );
 }
 
-export default TaskList;
+export default connect(
+    ({tasks}: { tasks: ITask[] }) => ({
+        tasks: tasks.filter(t => t.state === 'TASK_INBOX' || t.state === 'TASK_PINNED'),
+    }),
+    dispatch => ({
+        onArchiveTask: (id: string) => dispatch(archiveTask(id)),
+        onPinTask: (id: string) => dispatch(pinTask(id)),
+    })
+)(PureTaskList);
+
